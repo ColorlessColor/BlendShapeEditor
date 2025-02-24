@@ -6,10 +6,11 @@ using UnityEngine.Rendering;
 using UnityEditor;
 using UnityEditorInternal;
 
-namespace usefulunitytools.editorscript.imgui
+namespace usefulunitytools.editorscript.blendshape
 {
     /// <summary>
     /// 自定义的 EditorGUILauout 工具箱，自动布局
+    /// 作者: https://zhuanlan.zhihu.com/p/626207442
     /// </summary>
     public static class EditorGUILayoutKit
     {
@@ -218,6 +219,11 @@ namespace usefulunitytools.editorscript.imgui
         }
     }
 
+    /// <summary>
+    /// BlendShapeEditor
+    /// 作者: https://hyular.booth.pm/items/4662982
+    /// 二次修改: https://hrenact.github.io/HrenactNET/BlendShapeEditor/Description
+    /// </summary>
     public class BlendShapeEditor : EditorWindow
     {
 
