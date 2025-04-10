@@ -320,7 +320,15 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
                 // リセット
                 ResetMorphDatas();
                 scrollPos = Vector2.zero;
-                blendShapeNameFlag = CheckBlendShapeName(newBlendShapeName);
+                switch(tab)
+                {
+                    case 0:
+                        blendShapeNameFlag = CheckBlendShapeName();
+                        break;
+                    case 1:
+                        blendShapeNameFlag = CheckBlendShapeName(newBlendShapeName);
+                        break;
+                }
             }
 
             GUILayout.Space(10);
@@ -450,7 +458,7 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             GUILayout.Space(10);
             if (!blendShapeNameFlag)
             {
-                EditorGUILayout.HelpBox("已存在相同的 BlendShape 名称", MessageType.Error);
+                EditorGUILayout.HelpBox("存在相同的 BlendShape 名称", MessageType.Error);
             }
             else
             {
