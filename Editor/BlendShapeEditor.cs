@@ -239,8 +239,8 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
         private string[] morphNames;
         private ReorderableList sortMorphList;
         private ReorderableList blendMorphList;
-        private float minBlendshapeWeight = 0f;
-        private float maxBlendshapeWeight = 100f;
+        private const float minBlendshapeWeight = 0f;
+        private const float maxBlendshapeWeight = 100f;
 
         private int separateMorphID;
         private float separateSmoothRange = 0.001f;
@@ -479,14 +479,14 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
         {
             EditorGUILayout.HelpBox("修改此处的 Blendshape 值将会同步应用至 Inspector 的 Blendshapes 的值", MessageType.Info);
 
-            EditorGUILayout.BeginHorizontal();
-            minBlendshapeWeight = EditorGUILayout.FloatField("权重下限", minBlendshapeWeight);
-            maxBlendshapeWeight = EditorGUILayout.FloatField("权重上限", maxBlendshapeWeight);
-            EditorGUILayout.EndHorizontal();
-            if (minBlendshapeWeight > maxBlendshapeWeight)
-            {
-                minBlendshapeWeight = maxBlendshapeWeight;
-            }
+            // EditorGUILayout.BeginHorizontal();
+            // minBlendshapeWeight = EditorGUILayout.FloatField("权重下限", minBlendshapeWeight);
+            // maxBlendshapeWeight = EditorGUILayout.FloatField("权重上限", maxBlendshapeWeight);
+            // EditorGUILayout.EndHorizontal();
+            // if (minBlendshapeWeight > maxBlendshapeWeight)
+            // {
+            //     minBlendshapeWeight = maxBlendshapeWeight;
+            // }
 
             if (blendMorphList == null)
             {
@@ -893,7 +893,7 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             }
 
             //フレームの適用割合を算出
-            float applyRate = 1;
+            float applyRate;
             if (frameIndex == 0)
             {
                 applyRate = weight / 100f;
