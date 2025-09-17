@@ -113,7 +113,7 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
         Vector2 scrollPosition;
         public override void OnGUI(Rect rect)
         {
-            editorWindow.minSize = new Vector2(200, 400);
+            editorWindow.minSize = new Vector2(400, 400);
             GUILayout.Label("搜索：");
             filter = EditorGUILayout.TextField(filter);
             GUILayout.Space(20);
