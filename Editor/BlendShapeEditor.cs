@@ -703,7 +703,7 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             (
                 (newMesh, oldMesh) =>
                 {
-                    MeshUtils.CopyBlendShapeSorted(newMesh, oldMesh, (_) => morphDatas.Select(it => it.shapeIndex));
+                    MeshUtils.CopyBlendShapeSorted(newMesh, oldMesh, (_) => morphDatas.Select(it => (it.shapeIndex, it.shapeName)));
                 }
             )
             .BuildMesh();
@@ -1310,18 +1310,17 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             }
         }
 
-        public static void CopyBlendShapeSorted(Mesh newMesh, Mesh oldMesh, Func<Mesh, IEnumerable<int>> getSortedList)
+        public static void CopyBlendShapeSorted(Mesh newMesh, Mesh oldMesh, Func<Mesh, IEnumerable<(int, string)>> getSortedBlendshapeListWithName)
         {
             // 复制所有 blendshape
-            foreach (var shapeIndex in getSortedList(oldMesh))
+            foreach (var (shapeIndex, shapeName) in getSortedBlendshapeListWithName(oldMesh))
             {
                 for (int frameIndex = 0; frameIndex < oldMesh.GetBlendShapeFrameCount(shapeIndex); frameIndex++)
                 {
-                    string shapeName = oldMesh.GetBlendShapeName(shapeIndex);
                     float weight = oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex);
-                    var oldMeshFrame = new BlendshapeFrame(oldMesh, shapeIndex, frameIndex);
+                    var copyedMeshFrame = new BlendshapeFrame(oldMesh, shapeIndex, frameIndex);
 
-                    oldMeshFrame.WriteBlendShapeFrameToMesh(newMesh, shapeName, weight);
+                    copyedMeshFrame.WriteBlendShapeFrameToMesh(newMesh, shapeName, weight);
                 }
             }
         }
