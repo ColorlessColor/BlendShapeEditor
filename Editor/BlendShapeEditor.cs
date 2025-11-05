@@ -320,7 +320,7 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
                 // リセット
                 ResetMorphDatas();
                 scrollPos = Vector2.zero;
-                switch(tab)
+                switch (tab)
                 {
                     case 0:
                         blendShapeNameFlag = CheckBlendShapeName();
@@ -877,11 +877,6 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
 
         public MeshBuilder AddBlendshapeFrame(int shapeIndex, float weight)
         {
-            BlendshapeFrame frame = new(oldMesh.vertexCount);
-            // TODO 此处应该有如何从 Mesh 里想办法插值出目标权重
-            // 重新实现下面的部分
-
-            //Weightが指定したWeight以上になる最小のフレームを探す
             int frameIndex = 0;
             for (int i = 0; i < oldMesh.GetBlendShapeFrameCount(shapeIndex); i++)
             {
@@ -892,28 +887,40 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
                 }
             }
 
-            //フレームの適用割合を算出
-            float applyRate;
             if (frameIndex == 0)
             {
-                applyRate = weight / 100f;
+                // 只有 1 帧 blendshape, 谢天谢地
+                BlendshapeFrame frame = new(oldMesh, shapeIndex, frameIndex);
+
+                // weight 范围是 0~100, 转换成百分比
+                frame.MulInPlace(weight / 100f);
+
+                container.Add(frame);
             }
             else
             {
-                applyRate = (weight - oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex - 1)) / (oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex) - oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex - 1));
+                // 有多帧, 此时应当满足 frame0.weight < weight <= frame1.weight
+                // 非常不想插值但是这里需要插值, 不知道在法线和切线上插值是否是正确选择
+                // 这里有一个大大的**警告**: 用到这段代码你只能多加小心!
+
+                // 获得前后 2 帧权重
+                BlendshapeFrame frame0 = new(oldMesh, shapeIndex, frameIndex - 1);
+                BlendshapeFrame frame1 = new(oldMesh, shapeIndex, frameIndex);
+
+                // 获得前后 2 帧权重
+                float weightFrame0 = oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex - 1);
+                float weightFrame1 = oldMesh.GetBlendShapeFrameWeight(shapeIndex, frameIndex);
+
+                // lerp 比例是?
+                float t = (weight - weightFrame0) /
+                    (weightFrame1 - weightFrame0);
+
+                // 在 2 帧之间线性插值
+                frame0.LerpInPlace(frame1, t);
+
+                container.Add(frame0);
             }
 
-            oldMesh.GetBlendShapeFrameVertices(shapeIndex, frameIndex, frame.deltaVertices, frame.deltaNormals, frame.deltaTangents);
-
-            //差分ベクトルに適応割合を乗算
-            for (int i = 0; i < oldMesh.vertexCount; i++)
-            {
-                frame.deltaVertices[i] *= applyRate;
-                frame.deltaNormals[i] *= applyRate;
-                frame.deltaTangents[i] *= applyRate;
-            }
-
-            container.Add(frame);
 
             return this;
         }
@@ -1159,6 +1166,14 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             }
         }
 
+        public static void Vector3LerpInPlace(Vector3[] a, Vector3[] b, float t)
+        {
+            for (int i = 0; i < a.Length; i++)
+            {
+                a[i] = Vector3.Lerp(a[i], b[i], t);
+            }
+        }
+
         public void AddInPlace(BlendshapeFrame frame)
         {
             Vector3AddInPlace(deltaVertices, frame.deltaVertices);
@@ -1178,6 +1193,13 @@ namespace usefulunitytools.editorscript.BlendShapeEditor
             Vector3MulInPlace(deltaVertices, values);
             Vector3MulInPlace(deltaNormals, values);
             Vector3MulInPlace(deltaTangents, values);
+        }
+
+        public void LerpInPlace(BlendshapeFrame b, float t)
+        {
+            Vector3LerpInPlace(deltaVertices, b.deltaVertices, t);
+            Vector3LerpInPlace(deltaNormals, b.deltaNormals, t);
+            Vector3LerpInPlace(deltaTangents, b.deltaTangents, t);
         }
 
         public void WriteBlendShapeFrameToMesh(Mesh mesh, string name, float weight)
