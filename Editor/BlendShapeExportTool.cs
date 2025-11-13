@@ -99,7 +99,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
                     {
                         EditorUtility.DisplayDialog("导出失败", "导出的混合形状不能有相同命名", "Ok");
                     }
-                    else if (filterList.Count > 0)
+                    else if (filterList.Count <= 0)
                     {
                         EditorUtility.DisplayDialog("导出失败", "请至少导出一个混合形状", "Ok");
                     }
