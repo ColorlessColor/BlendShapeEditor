@@ -66,7 +66,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
             exportSMR = EditorGUILayout.ObjectField("Skinned Mesh Renderer", exportSMR, typeof(SkinnedMeshRenderer), true) as SkinnedMeshRenderer;
             if (EditorGUI.EndChangeCheck() || GUILayout.Button("刷新"))
             {
-                if (exportSMR) exportList = RebuildExportCheckList(exportSMR.sharedMesh, exportList);
+                if (exportSMR) exportList = RebuildExportCheckList(exportSMR.sharedMesh, exportList, false);
                 else exportList.Clear();
             }
             EditorGUILayout.EndHorizontal();
@@ -123,7 +123,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
             importAsset = EditorGUILayout.ObjectField("BlendShapeDataAsset", importAsset, typeof(BlendShapeDataAsset), false) as BlendShapeDataAsset;
             if (EditorGUI.EndChangeCheck())
             {
-                if (importAsset) RebuildImportCheckList(importAsset, importList);
+                if (importAsset) RebuildImportCheckList(importAsset, importList, true);
                 else importList.Clear();
             }
 
@@ -132,7 +132,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
                 if (importSMR) importSmrVertexCount = importSMR.sharedMesh.vertexCount;
                 else importSmrVertexCount = -1;
 
-                if (importAsset) RebuildImportCheckList(importAsset, importList);
+                if (importAsset) RebuildImportCheckList(importAsset, importList, true);
                 else importList.Clear();
             }
             EditorGUILayout.EndHorizontal();
@@ -189,7 +189,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
             }
         }
 
-        private static List<BlendShapeCheck> RebuildExportCheckList(Mesh mesh, List<BlendShapeCheck> checkList)
+        private static List<BlendShapeCheck> RebuildExportCheckList(Mesh mesh, List<BlendShapeCheck> checkList, bool isChecked)
         {
             checkList.Clear();
             for (int shapeIndex = 0; shapeIndex < mesh.blendShapeCount; shapeIndex++)
@@ -200,7 +200,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
                     new BlendShapeCheck()
                     {
                         shapeIndex = shapeIndex,
-                        isChecked = false,
+                        isChecked = isChecked,
                         originalBlendShapeName = blendShapeName,
                         rename = blendShapeName
                     }
@@ -209,7 +209,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
             return checkList;
         }
 
-        private static List<BlendShapeCheck> RebuildImportCheckList(BlendShapeDataAsset importAsset, List<BlendShapeCheck> checkList)
+        private static List<BlendShapeCheck> RebuildImportCheckList(BlendShapeDataAsset importAsset, List<BlendShapeCheck> checkList, bool isChecked)
         {
             checkList.Clear();
             for (int shapeIndex = 0; shapeIndex < importAsset.blendShapeDataList.Count; shapeIndex++)
@@ -219,7 +219,7 @@ namespace io.github.colorlesscolor.blendshapeeditor
                     new BlendShapeCheck()
                     {
                         shapeIndex = shapeIndex,    // 这里用于 importAsset.blendShapeDataList 索引
-                        isChecked = false,
+                        isChecked = isChecked,
                         originalBlendShapeName = importAsset.blendShapeDataList[shapeIndex].blendShapeName,
                         rename = importAsset.blendShapeDataList[shapeIndex].blendShapeName
                     }
