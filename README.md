@@ -9,3 +9,11 @@
 本存储库为第三次修改，重写下拉菜单行为，相关代码来源：https://zhuanlan.zhihu.com/p/626207442
 
 如果之前使用旧版，请删除旧版脚本后导入该版本 unitypackage，因为重命名了路径和 namespace。
+
+## BlendShape Edit Tool
+
+原版工具，提供编辑混合形状的能力
+
+## BlendShape Export Tool
+
+新增工具，允许在同样顶点数和顶点顺序的 Unity 网格上导入导出混合形状，可用于备份创建好的混合形状
