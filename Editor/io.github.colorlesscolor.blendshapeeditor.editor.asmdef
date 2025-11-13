@@ -1,0 +1,18 @@
+{
+    "name": "io.github.colorlesscolor.blendshapeeditor.editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:244be504ce5de6b4ea8c7b97214d46e4"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
